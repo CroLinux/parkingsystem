@@ -55,5 +55,30 @@ public class ParkingSpotDAO {
             dataBaseConfig.closeConnection(con);
         }
     }
+    
+    //To know, if this client/Vehicle/Registration number can have the discount
+    public int getFidelity(String vehicleRegNumber){
+        Connection con = null;
+        int fidelityvalue = 0;
+        try {
+            con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_FIDELITY);
+            //VISITS (COUNT t.ID)
+            ps.setString(1,vehicleRegNumber);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+
+                fidelityvalue = rs.getInt(1);
+
+            }
+            dataBaseConfig.closeResultSet(rs);
+            dataBaseConfig.closePreparedStatement(ps);
+        }catch (Exception ex){
+            logger.error("Error fetching the fidelity",ex);
+        }finally {
+            dataBaseConfig.closeConnection(con);
+        }
+        return fidelityvalue;
+    }
 
 }
