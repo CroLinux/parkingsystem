@@ -32,7 +32,9 @@ public class ParkingService {
 		try {
 			ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
 			if (parkingSpot != null && parkingSpot.getId() > 0) {
+				
 				String vehicleRegNumber = getVehichleRegNumber();
+				if (parkingSpotDAO.getPresence(vehicleRegNumber) < 1) { //We verify if the vehicle is already parked
 				parkingSpot.setAvailable(false);
 				parkingSpotDAO.updateParking(parkingSpot);// allot this parking space and mark it's availability as
 															// false
@@ -50,6 +52,10 @@ public class ParkingService {
 				System.out.println("Generated Ticket and saved in DB");
 				System.out.println("Please park your vehicle in spot number:" + parkingSpot.getId());
 				System.out.println("Recorded in-time for vehicle number:" + vehicleRegNumber + " is:" + inTime);
+				}
+				else {
+					System.out.println("This Registration Number is already parked.");
+				}
 			}
 		} catch (Exception e) {
 			logger.error("Unable to process incoming vehicle", e);

@@ -88,5 +88,33 @@ public class ParkingSpotDAO {
 		}
 		return fidelityvalue;
 	}
+	
+	// To know, if this client/Vehicle/Registration number is actually parked into the parking
+	public int getPresence(String vehicleRegNumber) {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		int presencevalue = 0;
+		try {
+			con = dataBaseConfig.getConnection();
+			ps = con.prepareStatement(DBConstants.GET_PRESENCE);
+			// VISITS (COUNT t.ID)
+			ps.setString(1, vehicleRegNumber);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				presencevalue = rs.getInt(1);
+			}
+			//dataBaseConfig.closeResultSet(rs);
+			//dataBaseConfig.closePreparedStatement(ps);
+		} catch (Exception ex) {
+			logger.error("Error fetching the resence", ex);
+		} finally {
+			dataBaseConfig.closeResultSet(rs);
+			dataBaseConfig.closeConnection(con);
+			dataBaseConfig.closePreparedStatement(ps);
+		}
+		return presencevalue;
+	}
 
 }
