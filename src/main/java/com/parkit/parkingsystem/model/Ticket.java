@@ -21,16 +21,21 @@ public class Ticket {
     }
 
     public ParkingSpot getParkingSpot() {
-    	//ParkingSpot a = parkingSpot;
-    	//return (ParkingSpot) a.clone();
-        return parkingSpot;
-        //return this.parkingSpot == null ? null : (ParkingSpot) this.parkingSpot.clone();
-    	//return (ParkingSpot) this.parkingSpot.clone();
+        //return parkingSpot;
+        if(parkingSpot == null){
+            return  null;
+        }else{
+            return parkingSpot.copy();
+        }
     }
     
     public void setParkingSpot(ParkingSpot parkingSpot) {
-        this.parkingSpot = parkingSpot;
-        //this.parkingSpot = parkingSpot == null ? null : (ParkingSpot) parkingSpot.clone();
+        //this.parkingSpot = parkingSpot;
+        if(parkingSpot == null){
+            this.parkingSpot = null;
+        }else{
+            this.parkingSpot = parkingSpot.copy();
+        }
     }
 
     public String getVehicleRegNumber() {
