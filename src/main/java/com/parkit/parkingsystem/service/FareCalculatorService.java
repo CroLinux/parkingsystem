@@ -17,7 +17,7 @@ public class FareCalculatorService {
         //We convert the Date object to an Instant for the Entry and Exit values
         Instant inHour = ticket.getInTime().toInstant();
         Instant outHour = ticket.getOutTime().toInstant();
-        
+
         //TODO: Some tests are failing here. Need to check if this logic is correct
         //Now, using those 2 Instant values, we calculate the difference between and convert the result in Hour
         
