@@ -35,7 +35,6 @@ public class ParkingDataBaseIT {
 	@Mock
 	private static InputReaderUtil inputReaderUtil;
 
-
 	@BeforeAll
 	private static void setUp() throws Exception {
 		parkingSpotDAO = new ParkingSpotDAO();
@@ -59,7 +58,8 @@ public class ParkingDataBaseIT {
 
 	@Test
 	public void testParkingACar() {
-		// TODO: check that a ticket is actually saved in DB and Parking table is updated
+		// TODO: check that a ticket is actually saved in DB and Parking table is
+		// updated
 		// with availability
 		// GIVEN
 		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
@@ -90,14 +90,15 @@ public class ParkingDataBaseIT {
 
 	@Test
 	public void testParkingLotExit() {
-		//GIVEN
+		// GIVEN
 		testParkingACar();
 		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
 		parkingService.processExitingVehicle();
 		// TODO: check that the fare generated and out time are populated correctly in
 		// the database
-		
-		// We generate a ticket with an entry time - 1 hour to be sure to get price different of 0
+
+		// We generate a ticket with an entry time - 1 hour to be sure to get price
+		// different of 0
 		Ticket ticket = new Ticket();
 		ticket.setInTime(new Date(System.currentTimeMillis() - 60 * 60 * 1000));
 		ticket.setOutTime(null);
@@ -107,12 +108,13 @@ public class ParkingDataBaseIT {
 		ticket.setParkingSpot(new ParkingSpot(1, ParkingType.CAR, false));
 		ticketDAO.saveTicket(ticket);
 
-		//WHEN
-		//We process the exit for this car/ticket created, in the console we can see a price
+		// WHEN
+		// We process the exit for this car/ticket created, in the console we can see a
+		// price
 		parkingService.processExitingVehicle();
 
-		//THEN
-		//We check if outTime is not null and the price is different to 0
+		// THEN
+		// We check if outTime is not null and the price is different to 0
 		Ticket testTicket = ticketDAO.getTicket("ABCDEF");
 		Assert.assertNotSame(null, testTicket.getOutTime());
 		Assert.assertNotSame(0, testTicket.getPrice());

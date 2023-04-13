@@ -190,89 +190,89 @@ public class FareCalculatorServiceTest {
 		fareCalculatorService.calculateFare(ticket, 0);
 		assertNotEquals(0, ticket.getPrice());
 	}
-	
-    @Test
-    public void calculateFidelityDiscountCar1Hour(){
-        Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - (60 * 60 * 1000) );
-        Date outTime = new Date();
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
 
-        ticket.setInTime(inTime);
-        ticket.setOutTime(outTime);
-        ticket.setParkingSpot(parkingSpot);
-        fareCalculatorService.calculateFare(ticket, 0.05);
-        assertEquals(1.425, ticket.getPrice());
-    }
+	@Test
+	public void calculateFidelityDiscountCar1Hour() {
+		Date inTime = new Date();
+		inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
+		Date outTime = new Date();
+		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
-    @Test
-    public void calculateFidelityDiscountCar6Hour(){
-        Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - (360 * 60 * 1000) );
-        Date outTime = new Date();
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
+		ticket.setInTime(inTime);
+		ticket.setOutTime(outTime);
+		ticket.setParkingSpot(parkingSpot);
+		fareCalculatorService.calculateFare(ticket, 0.05);
+		assertEquals(1.425, ticket.getPrice());
+	}
 
-        ticket.setInTime(inTime);
-        ticket.setOutTime(outTime);
-        ticket.setParkingSpot(parkingSpot);
-        fareCalculatorService.calculateFare(ticket, 0.05);
-        assertEquals(8.55, ticket.getPrice());
-    }
+	@Test
+	public void calculateFidelityDiscountCar6Hour() {
+		Date inTime = new Date();
+		inTime.setTime(System.currentTimeMillis() - (360 * 60 * 1000));
+		Date outTime = new Date();
+		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
-    @Test
-    public void calculateFidelityDiscountCar1Day(){
-        Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - (1440 * 60 * 1000) );
-        Date outTime = new Date();
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
+		ticket.setInTime(inTime);
+		ticket.setOutTime(outTime);
+		ticket.setParkingSpot(parkingSpot);
+		fareCalculatorService.calculateFare(ticket, 0.05);
+		assertEquals(8.55, ticket.getPrice());
+	}
 
-        ticket.setInTime(inTime);
-        ticket.setOutTime(outTime);
-        ticket.setParkingSpot(parkingSpot);
-        fareCalculatorService.calculateFare(ticket, 0.05);
-        assertEquals(34,2, ticket.getPrice());
-    }
-    
-    @Test
-    public void calculateFidelityDiscountBike1Hour(){
-        Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - (60 * 60 * 1000) );
-        Date outTime = new Date();
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE,false);
+	@Test
+	public void calculateFidelityDiscountCar1Day() {
+		Date inTime = new Date();
+		inTime.setTime(System.currentTimeMillis() - (1440 * 60 * 1000));
+		Date outTime = new Date();
+		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
-        ticket.setInTime(inTime);
-        ticket.setOutTime(outTime);
-        ticket.setParkingSpot(parkingSpot);
-        fareCalculatorService.calculateFare(ticket, 0.05);
-        assertEquals(0.95, ticket.getPrice());
-    }
+		ticket.setInTime(inTime);
+		ticket.setOutTime(outTime);
+		ticket.setParkingSpot(parkingSpot);
+		fareCalculatorService.calculateFare(ticket, 0.05);
+		assertEquals(34, 2, ticket.getPrice());
+	}
 
-    @Test
-    public void calculateFidelityDiscountBike6Hour(){
-        Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - (360 * 60 * 1000) );
-        Date outTime = new Date();
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE,false);
+	@Test
+	public void calculateFidelityDiscountBike1Hour() {
+		Date inTime = new Date();
+		inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
+		Date outTime = new Date();
+		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE, false);
 
-        ticket.setInTime(inTime);
-        ticket.setOutTime(outTime);
-        ticket.setParkingSpot(parkingSpot);
-        fareCalculatorService.calculateFare(ticket, 0.05);
-        assertEquals(5.7, ticket.getPrice());
-    }
+		ticket.setInTime(inTime);
+		ticket.setOutTime(outTime);
+		ticket.setParkingSpot(parkingSpot);
+		fareCalculatorService.calculateFare(ticket, 0.05);
+		assertEquals(0.95, ticket.getPrice());
+	}
 
-    @Test
-    public void calculateFidelityDiscountBike1Day(){
-        Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - (1440 * 60 * 1000) );
-        Date outTime = new Date();
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE,false);
+	@Test
+	public void calculateFidelityDiscountBike6Hour() {
+		Date inTime = new Date();
+		inTime.setTime(System.currentTimeMillis() - (360 * 60 * 1000));
+		Date outTime = new Date();
+		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE, false);
 
-        ticket.setInTime(inTime);
-        ticket.setOutTime(outTime);
-        ticket.setParkingSpot(parkingSpot);
-        fareCalculatorService.calculateFare(ticket, 0.05);
-        assertEquals(22.8, ticket.getPrice());
-    }
-    
+		ticket.setInTime(inTime);
+		ticket.setOutTime(outTime);
+		ticket.setParkingSpot(parkingSpot);
+		fareCalculatorService.calculateFare(ticket, 0.05);
+		assertEquals(5.7, ticket.getPrice());
+	}
+
+	@Test
+	public void calculateFidelityDiscountBike1Day() {
+		Date inTime = new Date();
+		inTime.setTime(System.currentTimeMillis() - (1440 * 60 * 1000));
+		Date outTime = new Date();
+		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE, false);
+
+		ticket.setInTime(inTime);
+		ticket.setOutTime(outTime);
+		ticket.setParkingSpot(parkingSpot);
+		fareCalculatorService.calculateFare(ticket, 0.05);
+		assertEquals(22.8, ticket.getPrice());
+	}
+
 }
