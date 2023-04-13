@@ -8,7 +8,7 @@ import com.parkit.parkingsystem.model.Ticket;
 
 public class FareCalculatorService {
 
-	public void calculateFare(Ticket ticket) {
+	public void calculateFare(Ticket ticket, double discount) {
 		if ((ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime()))) {
 			throw new IllegalArgumentException("Out time provided is incorrect:" + ticket.getOutTime().toString());
 		}
@@ -26,22 +26,34 @@ public class FareCalculatorService {
 		// other method for the same calculation:
 		// double duration = inHour.until(outHour, ChronoUnit.SECONDS);
 
-		// *** Here we check if the duration is less than 0.5 so less than 30 minutes
+		// *** Here we check if the duration is less than 0.5 so less than 30 minutes.
 		if (duration < 0.5) {
 			duration = 0.0;
 		}
-
+		
 		switch (ticket.getParkingSpot().getParkingType()) {
 		case CAR: {
-			ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR);
+			//ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR);
+			double normalPrice = duration * Fare.CAR_RATE_PER_HOUR;
+			System.out.println("normalpricecar " + normalPrice + " " + discount);
+			ticket.setPrice(priceDiscounted(discount, normalPrice));
 			break;
 		}
 		case BIKE: {
-			ticket.setPrice(duration * Fare.BIKE_RATE_PER_HOUR);
+			//ticket.setPrice(duration * Fare.BIKE_RATE_PER_HOUR);
+			double normalPrice = duration * Fare.BIKE_RATE_PER_HOUR;
+			System.out.println("normalpricebike " + normalPrice + " " + discount);
+			ticket.setPrice(priceDiscounted(discount, normalPrice));
 			break;
 		}
 		default:
 			throw new IllegalArgumentException("Unkown Parking Type");
 		}
 	}
+	
+    public double priceDiscounted(double discountvalue, double normPrice){
+        double finalPrice = normPrice - (normPrice * discountvalue);
+		System.out.println("finalprice " + finalPrice);
+        return finalPrice;
+    }
 }

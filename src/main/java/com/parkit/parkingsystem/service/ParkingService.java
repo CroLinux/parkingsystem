@@ -1,5 +1,6 @@
 package com.parkit.parkingsystem.service;
 
+import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
@@ -103,7 +104,13 @@ public class ParkingService {
             Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
             Date outTime = new Date();
             ticket.setOutTime(outTime);
-            fareCalculatorService.calculateFare(ticket);
+            //Here we have the fidelity if possible
+            double discount = 0;
+            if(getFidelity(vehicleRegNumber) >= 2) {
+            	discount = Fare.FIDELITY_DISCOUNT;
+            }
+            
+            fareCalculatorService.calculateFare(ticket, discount);
             if(ticketDAO.updateTicket(ticket)) {
                 ParkingSpot parkingSpot = ticket.getParkingSpot();
                 parkingSpot.setAvailable(true);
@@ -116,5 +123,12 @@ public class ParkingService {
         }catch(Exception e){
             logger.error("Unable to process exiting vehicle",e);
         }
+    }
+    
+	// *** Here we check if the client can have the discount, so fidelity check.
+    public int getFidelity(String vehicleRegNumber){
+        int fidelity = parkingSpotDAO.getFidelity(vehicleRegNumber);
+        System.out.println("Fidelityvalue from the DB "+ fidelity);
+        return fidelity;
     }
 }
