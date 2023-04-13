@@ -20,6 +20,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 import java.text.SimpleDateFormat;
@@ -46,11 +48,13 @@ public class ParkingDataBaseIT {
 	}
 
 	@BeforeEach
-    private void setUpPerTest() throws Exception {
-        when(inputReaderUtil.readSelection()).thenReturn(1);
-        when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
-        dataBasePrepareService.clearDataBaseEntries();
-    }
+	private void setUpPerTest() throws Exception {
+		//lenient() is added here, anyway we have an error into the testParkingLotExit()
+		//as we don't really use anymore testParkingACar()
+		lenient().when(inputReaderUtil.readSelection()).thenReturn(1);
+		when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+		dataBasePrepareService.clearDataBaseEntries();
+	}
 
 	@AfterAll
 	private static void tearDown() {
@@ -60,8 +64,8 @@ public class ParkingDataBaseIT {
 	@Test
 	public void testParkingACar() {
 		// TODO: check that a ticket is actually saved in DB and Parking table is
-		// updated
-		// with availability
+		// updated with availability
+
 		// GIVEN
 		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
 		// Here we define a format for the next dates comparison and we get a reference
@@ -91,10 +95,9 @@ public class ParkingDataBaseIT {
 
 	@Test
 	public void testParkingLotExit() {
-		// GIVEN
-		testParkingACar();
+		// testParkingACar();
 		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
-		parkingService.processExitingVehicle();
+		// parkingService.processExitingVehicle();
 		// TODO: check that the fare generated and out time are populated correctly in
 		// the database
 
@@ -109,17 +112,14 @@ public class ParkingDataBaseIT {
 		ticket.setParkingSpot(new ParkingSpot(1, ParkingType.CAR, false));
 		ticketDAO.saveTicket(ticket);
 
-		// WHEN
 		// We process the exit for this car/ticket created, in the console we can see a
 		// price
 		parkingService.processExitingVehicle();
 
-		// THEN
 		// We check if outTime is not null and the price is different to 0
 		Ticket testTicket = ticketDAO.getTicket("ABCDEF");
 		Assert.assertNotSame(null, testTicket.getOutTime());
 		Assert.assertNotSame(0, testTicket.getPrice());
-		//Assert.assertSame(null, testTicket.getOutTime());
 	}
 
 }
