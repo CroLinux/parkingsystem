@@ -32,28 +32,27 @@ public class ParkingService {
 		try {
 			ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
 			if (parkingSpot != null && parkingSpot.getId() > 0) {
-				
-				String vehicleRegNumber = getVehichleRegNumber();
-				if (parkingSpotDAO.getPresence(vehicleRegNumber) < 1) { //We verify if the vehicle is already parked
-				parkingSpot.setAvailable(false);
-				parkingSpotDAO.updateParking(parkingSpot);// allot this parking space and mark it's availability as
-															// false
 
-				Date inTime = new Date();
-				Ticket ticket = new Ticket();
-				// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-				// ticket.setId(ticketID);
-				ticket.setParkingSpot(parkingSpot);
-				ticket.setVehicleRegNumber(vehicleRegNumber);
-				ticket.setPrice(0);
-				ticket.setInTime(inTime);
-				ticket.setOutTime(null);
-				ticketDAO.saveTicket(ticket);
-				System.out.println("Generated Ticket and saved in DB");
-				System.out.println("Please park your vehicle in spot number:" + parkingSpot.getId());
-				System.out.println("Recorded in-time for vehicle number:" + vehicleRegNumber + " is:" + inTime);
-				}
-				else {
+				String vehicleRegNumber = getVehichleRegNumber();
+				if (parkingSpotDAO.getPresence(vehicleRegNumber) < 1) { // We verify if the vehicle is already parked
+					parkingSpot.setAvailable(false);
+					parkingSpotDAO.updateParking(parkingSpot);// allot this parking space and mark it's availability as
+																// false
+
+					Date inTime = new Date();
+					Ticket ticket = new Ticket();
+					// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
+					// ticket.setId(ticketID);
+					ticket.setParkingSpot(parkingSpot);
+					ticket.setVehicleRegNumber(vehicleRegNumber);
+					ticket.setPrice(0);
+					ticket.setInTime(inTime);
+					ticket.setOutTime(null);
+					ticketDAO.saveTicket(ticket);
+					System.out.println("Generated Ticket and saved in DB");
+					System.out.println("Please park your vehicle in spot number:" + parkingSpot.getId());
+					System.out.println("Recorded in-time for vehicle number:" + vehicleRegNumber + " is:" + inTime);
+				} else {
 					System.out.println("This Registration Number is already parked.");
 				}
 			}
@@ -108,23 +107,25 @@ public class ParkingService {
 	public void processExitingVehicle() {
 		try {
 			String vehicleRegNumber = getVehichleRegNumber();
-			Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
-			Date outTime = new Date();
-			ticket.setOutTime(outTime);
-			// Here we have the fidelity if possible
-			double discount = 0;
-			if (getFidelity(vehicleRegNumber) >= 2) {
-				discount = Fare.FIDELITY_DISCOUNT;
-			}
+			if (parkingSpotDAO.getPresence(vehicleRegNumber) == 1) { // We verify if the vehicle is present
+				Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
+				Date outTime = new Date();
+				ticket.setOutTime(outTime);
+				// Here we have the fidelity if possible
+				double discount = 0;
+				if (getFidelity(vehicleRegNumber) >= 2) {
+					discount = Fare.FIDELITY_DISCOUNT;
+				}
 
-			fareCalculatorService.calculateFare(ticket, discount);
-			if (ticketDAO.updateTicket(ticket)) {
-				ParkingSpot parkingSpot = ticket.getParkingSpot();
-				parkingSpot.setAvailable(true);
-				parkingSpotDAO.updateParking(parkingSpot);
-				System.out.println("Please pay the parking fare: " + String.format("%.2f", ticket.getPrice()));
-				System.out.println(
-						"Recorded out-time for vehicle number:" + ticket.getVehicleRegNumber() + " is:" + outTime);
+				fareCalculatorService.calculateFare(ticket, discount);
+				if (ticketDAO.updateTicket(ticket)) {
+					ParkingSpot parkingSpot = ticket.getParkingSpot();
+					parkingSpot.setAvailable(true);
+					parkingSpotDAO.updateParking(parkingSpot);
+					System.out.println("Please pay the parking fare: " + String.format("%.2f", ticket.getPrice()));
+					System.out.println(
+							"Recorded out-time for vehicle number:" + ticket.getVehicleRegNumber() + " is:" + outTime);
+				} 
 			} else {
 				System.out.println("Unable to update ticket information. Error occurred");
 			}
