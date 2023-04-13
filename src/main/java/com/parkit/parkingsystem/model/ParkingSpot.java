@@ -36,6 +36,10 @@ public class ParkingSpot {
     public void setAvailable(boolean available) {
         isAvailable = available;
     }
+    
+    public ParkingSpot copy(){
+        return new ParkingSpot(getId(), getParkingType(), isAvailable());
+    }
 
     @Override
     public boolean equals(Object o) {
