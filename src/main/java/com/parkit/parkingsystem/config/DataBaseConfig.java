@@ -3,17 +3,39 @@ package com.parkit.parkingsystem.config;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Properties;
+import java.io.InputStream;
+import java.io.IOException;
+
 import java.sql.*;
 
 public class DataBaseConfig {
 
     private static final Logger logger = LogManager.getLogger("DataBaseConfig");
 
+    /**
     public Connection getConnection() throws ClassNotFoundException, SQLException {
         logger.info("Create DB connection");
         Class.forName("com.mysql.cj.jdbc.Driver");
         return DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/prod","root","rootroot");
+    }
+    */
+    
+    //We modify this part regarding the connection to the DB in order to save the pwd not here (Spotbugs warning)
+    public Connection getConnection() throws ClassNotFoundException, SQLException {
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("db.properties")) {
+            Properties dbproperties = new Properties();
+
+            dbproperties.load(input);
+            logger.debug("Create DB connection");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            return DriverManager.getConnection( dbproperties.getProperty("db.url"), dbproperties.getProperty("db.user"), dbproperties.getProperty("db.password"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
     public void closeConnection(Connection con){
